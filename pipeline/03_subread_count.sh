@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 #SBATCH --nodes 1 --ntasks 24 --mem 96G -J subreadcount -p short
 #SBATCH --time 2:0:0 --out logs/subread_count.log
 
@@ -6,7 +6,7 @@ module load subread/1.6.2
 
 GENOME=genome/candida_lusitaniae_ATCC42720_w_CBS_6936_MT.fasta
 # transcript file was updated to recover missing genes
-GFF=genome/candida_lusitaniae_1_transcripts.gtf
+GFF=genome/candida_lusitaniae_1_fixed.gtf
 OUTDIR=results/featureCounts
 INDIR=aln
 EXTENSION=gsnap.bam
