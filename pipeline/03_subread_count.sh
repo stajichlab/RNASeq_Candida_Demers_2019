@@ -20,18 +20,8 @@ if [ -z $CPU ]; then
 fi
 
 IFS=,
-#tail -n +2 $SAMPLEFILE | while read PREFIX GENOTYPE TREATMENT REP
-#do
-#    SAMPINFO=${GENOTYPE}.${TREATMENT}.r${REP}
-#    OUTFILE=$OUTDIR/${SAMPINFO}.gsnap_reads.tab
-#    INFILE=$INDIR/${SAMPINFO}.$EXTENSION
-#    if [ ! -f $OUTFILE ]; then
-#	featureCounts -g gene_id -T $CPUS -G $GENOME -a $GFF \
-#            --tmpDir $TEMP  \
-#	    -o $OUTFILE -F GTF $INFILE
-#    fi
-#done
 OUTFILE=$OUTDIR/ClusDemers_2019.subRead_gsnap.tab
 BAM=$(ls $INDIR/*.bam)
 echo $BAM
 featureCounts -g gene_id -T $CPUS -G $GENOME -a $GFF --tmpDir $TEMP -o $OUTFILE -F GTF $INDIR/*.bam
+perl -i -p -e 's/aln\///g; s/\.gsnap\.bam//g;' $OUTFILE $OUTFILE.summary
