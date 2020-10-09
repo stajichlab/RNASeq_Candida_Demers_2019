@@ -1,0 +1,6 @@
+logs/
+*.ht2
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
