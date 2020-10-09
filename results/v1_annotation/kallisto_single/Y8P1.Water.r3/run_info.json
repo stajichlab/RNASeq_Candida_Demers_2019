@@ -1,0 +1,13 @@
+{
+	"n_targets": 5941,
+	"n_bootstraps": 0,
+	"n_processed": 7253204,
+	"n_pseudoaligned": 4580707,
+	"n_unique": 4169244,
+	"p_pseudoaligned": 63.2,
+	"p_unique": 57.5,
+	"kallisto_version": "0.46.2",
+	"index_version": 10,
+	"start_time": "Fri Sep 25 14:36:35 2020",
+	"call": "kallisto quant -i genome/Clus.CDS.idx -o results/kallisto_single/Y8P1.Water.r3 -t 8 --bias --single -l 300 --sd 1000 raw/ED18_S18_R1_001.fastq.gz"
+}

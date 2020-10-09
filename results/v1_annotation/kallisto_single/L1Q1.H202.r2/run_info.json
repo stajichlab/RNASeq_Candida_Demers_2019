@@ -1,0 +1,13 @@
+{
+	"n_targets": 5941,
+	"n_bootstraps": 0,
+	"n_processed": 7052291,
+	"n_pseudoaligned": 3573280,
+	"n_unique": 3319703,
+	"p_pseudoaligned": 50.7,
+	"p_unique": 47.1,
+	"kallisto_version": "0.46.2",
+	"index_version": 10,
+	"start_time": "Fri Sep 25 14:37:05 2020",
+	"call": "kallisto quant -i genome/Clus.CDS.idx -o results/kallisto_single/L1Q1.H202.r2 -t 8 --bias --single -l 300 --sd 1000 raw/ED47_S47_R1_001.fastq.gz"
+}

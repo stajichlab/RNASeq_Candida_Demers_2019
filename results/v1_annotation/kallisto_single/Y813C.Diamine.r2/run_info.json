@@ -1,0 +1,13 @@
+{
+	"n_targets": 5941,
+	"n_bootstraps": 0,
+	"n_processed": 6330081,
+	"n_pseudoaligned": 3735116,
+	"n_unique": 3438332,
+	"p_pseudoaligned": 59.0,
+	"p_unique": 54.3,
+	"kallisto_version": "0.46.2",
+	"index_version": 10,
+	"start_time": "Fri Sep 25 14:36:36 2020",
+	"call": "kallisto quant -i genome/Clus.CDS.idx -o results/kallisto_single/Y813C.Diamine.r2 -t 8 --bias --single -l 300 --sd 1000 raw/ED32_S32_R1_001.fastq.gz"
+}
