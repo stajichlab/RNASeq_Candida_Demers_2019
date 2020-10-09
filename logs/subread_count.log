@@ -1,55 +1,55 @@
-aln/L1Q1.Diamine.r1.gsnap.bam
-aln/L1Q1.Diamine.r2.gsnap.bam
-aln/L1Q1.Diamine.r3.gsnap.bam
+aln/L1Q1.Diamide.r1.gsnap.bam
+aln/L1Q1.Diamide.r2.gsnap.bam
+aln/L1Q1.Diamide.r3.gsnap.bam
 aln/L1Q1.H202.r1.gsnap.bam
 aln/L1Q1.H202.r2.gsnap.bam
 aln/L1Q1.H202.r3.gsnap.bam
 aln/L1Q1.Water.r1.gsnap.bam
 aln/L1Q1.Water.r2.gsnap.bam
 aln/L1Q1.Water.r3.gsnap.bam
-aln/WT.Diamine.r1.gsnap.bam
-aln/WT.Diamine.r2.gsnap.bam
-aln/WT.Diamine.r3.gsnap.bam
+aln/WT.Diamide.r1.gsnap.bam
+aln/WT.Diamide.r2.gsnap.bam
+aln/WT.Diamide.r3.gsnap.bam
 aln/WT.H202.r1.gsnap.bam
 aln/WT.H202.r2.gsnap.bam
 aln/WT.H202.r3.gsnap.bam
 aln/WT.Water.r1.gsnap.bam
 aln/WT.Water.r2.gsnap.bam
 aln/WT.Water.r3.gsnap.bam
-aln/Y813C.Diamine.r1.gsnap.bam
-aln/Y813C.Diamine.r2.gsnap.bam
-aln/Y813C.Diamine.r3.gsnap.bam
+aln/Y813C.Diamide.r1.gsnap.bam
+aln/Y813C.Diamide.r2.gsnap.bam
+aln/Y813C.Diamide.r3.gsnap.bam
 aln/Y813C.H202.r1.gsnap.bam
 aln/Y813C.H202.r2.gsnap.bam
 aln/Y813C.H202.r3.gsnap.bam
 aln/Y813C.Water.r1.gsnap.bam
 aln/Y813C.Water.r2.gsnap.bam
 aln/Y813C.Water.r3.gsnap.bam
-aln/Y8P1.Diamine.r1.gsnap.bam
-aln/Y8P1.Diamine.r2.gsnap.bam
-aln/Y8P1.Diamine.r3.gsnap.bam
+aln/Y8P1.Diamide.r1.gsnap.bam
+aln/Y8P1.Diamide.r2.gsnap.bam
+aln/Y8P1.Diamide.r3.gsnap.bam
 aln/Y8P1.H202.r1.gsnap.bam
 aln/Y8P1.H202.r2.gsnap.bam
 aln/Y8P1.H202.r3.gsnap.bam
 aln/Y8P1.Water.r1.gsnap.bam
 aln/Y8P1.Water.r2.gsnap.bam
 aln/Y8P1.Water.r3.gsnap.bam
-aln/anc.Diamine.r1.gsnap.bam
-aln/anc.Diamine.r2.gsnap.bam
-aln/anc.Diamine.r3.gsnap.bam
+aln/anc.Diamide.r1.gsnap.bam
+aln/anc.Diamide.r2.gsnap.bam
+aln/anc.Diamide.r3.gsnap.bam
 aln/anc.H202.r1.gsnap.bam
 aln/anc.H202.r2.gsnap.bam
 aln/anc.H202.r3.gsnap.bam
 aln/anc.Water.r1.gsnap.bam
 aln/anc.Water.r2.gsnap.bam
 aln/anc.Water.r3.gsnap.bam
-aln/mrr1.Diamine.r1.gsnap.bam
-aln/mrr1.Diamine.r2.gsnap.bam
+aln/mrr1.Diamide.r1.gsnap.bam
+aln/mrr1.Diamide.r2.gsnap.bam
 aln/mrr1.H202.r1.gsnap.bam
 aln/mrr1.H202.r2.gsnap.bam
 aln/mrr1.Water.r1.gsnap.bam
 aln/mrr1.Water.r2.gsnap.bam
-aln/mrrr1.Diamine.r3.gsnap.bam
+aln/mrrr1.Diamide.r3.gsnap.bam
 aln/mrrr1.H202.r3.gsnap.bam
 aln/mrrr1.Water.r3.gsnap.bam
 
@@ -64,58 +64,58 @@ aln/mrrr1.Water.r3.gsnap.bam
 //========================== featureCounts setting ===========================\\
 ||                                                                            ||
 ||             Input files : 54 BAM files                                     ||
-||                           S L1Q1.Diamine.r1.gsnap.bam                      ||
-||                           S L1Q1.Diamine.r2.gsnap.bam                      ||
-||                           S L1Q1.Diamine.r3.gsnap.bam                      ||
+||                           S L1Q1.Diamide.r1.gsnap.bam                      ||
+||                           S L1Q1.Diamide.r2.gsnap.bam                      ||
+||                           S L1Q1.Diamide.r3.gsnap.bam                      ||
 ||                           S L1Q1.H202.r1.gsnap.bam                         ||
 ||                           S L1Q1.H202.r2.gsnap.bam                         ||
 ||                           S L1Q1.H202.r3.gsnap.bam                         ||
 ||                           S L1Q1.Water.r1.gsnap.bam                        ||
 ||                           S L1Q1.Water.r2.gsnap.bam                        ||
 ||                           S L1Q1.Water.r3.gsnap.bam                        ||
-||                           S WT.Diamine.r1.gsnap.bam                        ||
-||                           S WT.Diamine.r2.gsnap.bam                        ||
-||                           S WT.Diamine.r3.gsnap.bam                        ||
+||                           S WT.Diamide.r1.gsnap.bam                        ||
+||                           S WT.Diamide.r2.gsnap.bam                        ||
+||                           S WT.Diamide.r3.gsnap.bam                        ||
 ||                           S WT.H202.r1.gsnap.bam                           ||
 ||                           S WT.H202.r2.gsnap.bam                           ||
 ||                           S WT.H202.r3.gsnap.bam                           ||
 ||                           S WT.Water.r1.gsnap.bam                          ||
 ||                           S WT.Water.r2.gsnap.bam                          ||
 ||                           S WT.Water.r3.gsnap.bam                          ||
-||                           S Y813C.Diamine.r1.gsnap.bam                     ||
-||                           S Y813C.Diamine.r2.gsnap.bam                     ||
-||                           S Y813C.Diamine.r3.gsnap.bam                     ||
+||                           S Y813C.Diamide.r1.gsnap.bam                     ||
+||                           S Y813C.Diamide.r2.gsnap.bam                     ||
+||                           S Y813C.Diamide.r3.gsnap.bam                     ||
 ||                           S Y813C.H202.r1.gsnap.bam                        ||
 ||                           S Y813C.H202.r2.gsnap.bam                        ||
 ||                           S Y813C.H202.r3.gsnap.bam                        ||
 ||                           S Y813C.Water.r1.gsnap.bam                       ||
 ||                           S Y813C.Water.r2.gsnap.bam                       ||
 ||                           S Y813C.Water.r3.gsnap.bam                       ||
-||                           S Y8P1.Diamine.r1.gsnap.bam                      ||
-||                           S Y8P1.Diamine.r2.gsnap.bam                      ||
-||                           S Y8P1.Diamine.r3.gsnap.bam                      ||
+||                           S Y8P1.Diamide.r1.gsnap.bam                      ||
+||                           S Y8P1.Diamide.r2.gsnap.bam                      ||
+||                           S Y8P1.Diamide.r3.gsnap.bam                      ||
 ||                           S Y8P1.H202.r1.gsnap.bam                         ||
 ||                           S Y8P1.H202.r2.gsnap.bam                         ||
 ||                           S Y8P1.H202.r3.gsnap.bam                         ||
 ||                           S Y8P1.Water.r1.gsnap.bam                        ||
 ||                           S Y8P1.Water.r2.gsnap.bam                        ||
 ||                           S Y8P1.Water.r3.gsnap.bam                        ||
-||                           S anc.Diamine.r1.gsnap.bam                       ||
-||                           S anc.Diamine.r2.gsnap.bam                       ||
-||                           S anc.Diamine.r3.gsnap.bam                       ||
+||                           S anc.Diamide.r1.gsnap.bam                       ||
+||                           S anc.Diamide.r2.gsnap.bam                       ||
+||                           S anc.Diamide.r3.gsnap.bam                       ||
 ||                           S anc.H202.r1.gsnap.bam                          ||
 ||                           S anc.H202.r2.gsnap.bam                          ||
 ||                           S anc.H202.r3.gsnap.bam                          ||
 ||                           S anc.Water.r1.gsnap.bam                         ||
 ||                           S anc.Water.r2.gsnap.bam                         ||
 ||                           S anc.Water.r3.gsnap.bam                         ||
-||                           S mrr1.Diamine.r1.gsnap.bam                      ||
-||                           S mrr1.Diamine.r2.gsnap.bam                      ||
+||                           S mrr1.Diamide.r1.gsnap.bam                      ||
+||                           S mrr1.Diamide.r2.gsnap.bam                      ||
 ||                           S mrr1.H202.r1.gsnap.bam                         ||
 ||                           S mrr1.H202.r2.gsnap.bam                         ||
 ||                           S mrr1.Water.r1.gsnap.bam                        ||
 ||                           S mrr1.Water.r2.gsnap.bam                        ||
-||                           S mrrr1.Diamine.r3.gsnap.bam                     ||
+||                           S mrrr1.Diamide.r3.gsnap.bam                     ||
 ||                           S mrrr1.H202.r3.gsnap.bam                        ||
 ||                           S mrrr1.Water.r3.gsnap.bam                       ||
 ||                                                                            ||
@@ -143,21 +143,21 @@ aln/mrrr1.Water.r3.gsnap.bam
 || Loading FASTA contigs : genome/candida_lusitaniae_ATCC42720_w_CBS_6936 ... ||
 ||    9 contigs were loaded                                                   ||
 ||                                                                            ||
-|| Process BAM file L1Q1.Diamine.r1.gsnap.bam...                              ||
+|| Process BAM file L1Q1.Diamide.r1.gsnap.bam...                              ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 7321778                                                   ||
 ||    Successfully assigned reads : 4450354 (60.8%)                           ||
 ||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file L1Q1.Diamine.r2.gsnap.bam...                              ||
+|| Process BAM file L1Q1.Diamide.r2.gsnap.bam...                              ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 6630924                                                   ||
 ||    Successfully assigned reads : 3580600 (54.0%)                           ||
 ||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file L1Q1.Diamine.r3.gsnap.bam...                              ||
+|| Process BAM file L1Q1.Diamide.r3.gsnap.bam...                              ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 5832219                                                   ||
@@ -206,21 +206,21 @@ aln/mrrr1.Water.r3.gsnap.bam
 ||    Successfully assigned reads : 5698871 (60.7%)                           ||
 ||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file WT.Diamine.r1.gsnap.bam...                                ||
+|| Process BAM file WT.Diamide.r1.gsnap.bam...                                ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 9330798                                                   ||
 ||    Successfully assigned reads : 5659892 (60.7%)                           ||
 ||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file WT.Diamine.r2.gsnap.bam...                                ||
+|| Process BAM file WT.Diamide.r2.gsnap.bam...                                ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 8680966                                                   ||
 ||    Successfully assigned reads : 5367127 (61.8%)                           ||
 ||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file WT.Diamine.r3.gsnap.bam...                                ||
+|| Process BAM file WT.Diamide.r3.gsnap.bam...                                ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 11861030                                                  ||
@@ -269,26 +269,26 @@ aln/mrrr1.Water.r3.gsnap.bam
 ||    Successfully assigned reads : 5471276 (61.8%)                           ||
 ||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file Y813C.Diamine.r1.gsnap.bam...                             ||
+|| Process BAM file Y813C.Diamide.r1.gsnap.bam...                             ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 12322535                                                  ||
 ||    Successfully assigned reads : 6797547 (55.2%)                           ||
-||    Running time : 0.03 minutes                                             ||
+||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file Y813C.Diamine.r2.gsnap.bam...                             ||
+|| Process BAM file Y813C.Diamide.r2.gsnap.bam...                             ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 7878338                                                   ||
 ||    Successfully assigned reads : 4102026 (52.1%)                           ||
 ||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file Y813C.Diamine.r3.gsnap.bam...                             ||
+|| Process BAM file Y813C.Diamide.r3.gsnap.bam...                             ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 12065063                                                  ||
 ||    Successfully assigned reads : 6568857 (54.4%)                           ||
-||    Running time : 0.02 minutes                                             ||
+||    Running time : 0.03 minutes                                             ||
 ||                                                                            ||
 || Process BAM file Y813C.H202.r1.gsnap.bam...                                ||
 ||    Single-end reads are included.                                          ||
@@ -316,7 +316,7 @@ aln/mrrr1.Water.r3.gsnap.bam
 ||    Assign reads to features...                                             ||
 ||    Total reads : 11997703                                                  ||
 ||    Successfully assigned reads : 7085905 (59.1%)                           ||
-||    Running time : 0.02 minutes                                             ||
+||    Running time : 0.03 minutes                                             ||
 ||                                                                            ||
 || Process BAM file Y813C.Water.r2.gsnap.bam...                               ||
 ||    Single-end reads are included.                                          ||
@@ -332,21 +332,21 @@ aln/mrrr1.Water.r3.gsnap.bam
 ||    Successfully assigned reads : 8267224 (60.2%)                           ||
 ||    Running time : 0.03 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file Y8P1.Diamine.r1.gsnap.bam...                              ||
+|| Process BAM file Y8P1.Diamide.r1.gsnap.bam...                              ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 11998284                                                  ||
 ||    Successfully assigned reads : 7019452 (58.5%)                           ||
-||    Running time : 0.03 minutes                                             ||
+||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file Y8P1.Diamine.r2.gsnap.bam...                              ||
+|| Process BAM file Y8P1.Diamide.r2.gsnap.bam...                              ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 8107061                                                   ||
 ||    Successfully assigned reads : 4749516 (58.6%)                           ||
 ||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file Y8P1.Diamine.r3.gsnap.bam...                              ||
+|| Process BAM file Y8P1.Diamide.r3.gsnap.bam...                              ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 6768930                                                   ||
@@ -395,21 +395,21 @@ aln/mrrr1.Water.r3.gsnap.bam
 ||    Successfully assigned reads : 5118514 (63.4%)                           ||
 ||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file anc.Diamine.r1.gsnap.bam...                               ||
+|| Process BAM file anc.Diamide.r1.gsnap.bam...                               ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 12667247                                                  ||
 ||    Successfully assigned reads : 7857470 (62.0%)                           ||
 ||    Running time : 0.03 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file anc.Diamine.r2.gsnap.bam...                               ||
+|| Process BAM file anc.Diamide.r2.gsnap.bam...                               ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 10307219                                                  ||
 ||    Successfully assigned reads : 6239941 (60.5%)                           ||
 ||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file anc.Diamine.r3.gsnap.bam...                               ||
+|| Process BAM file anc.Diamide.r3.gsnap.bam...                               ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 7682118                                                   ||
@@ -456,16 +456,16 @@ aln/mrrr1.Water.r3.gsnap.bam
 ||    Assign reads to features...                                             ||
 ||    Total reads : 11439044                                                  ||
 ||    Successfully assigned reads : 6858253 (60.0%)                           ||
-||    Running time : 0.03 minutes                                             ||
+||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file mrr1.Diamine.r1.gsnap.bam...                              ||
+|| Process BAM file mrr1.Diamide.r1.gsnap.bam...                              ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 9098629                                                   ||
 ||    Successfully assigned reads : 5729638 (63.0%)                           ||
 ||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file mrr1.Diamine.r2.gsnap.bam...                              ||
+|| Process BAM file mrr1.Diamide.r2.gsnap.bam...                              ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 9432269                                                   ||
@@ -500,7 +500,7 @@ aln/mrrr1.Water.r3.gsnap.bam
 ||    Successfully assigned reads : 5335083 (64.6%)                           ||
 ||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
-|| Process BAM file mrrr1.Diamine.r3.gsnap.bam...                             ||
+|| Process BAM file mrrr1.Diamide.r3.gsnap.bam...                             ||
 ||    Single-end reads are included.                                          ||
 ||    Assign reads to features...                                             ||
 ||    Total reads : 10925750                                                  ||
@@ -512,7 +512,7 @@ aln/mrrr1.Water.r3.gsnap.bam
 ||    Assign reads to features...                                             ||
 ||    Total reads : 12248797                                                  ||
 ||    Successfully assigned reads : 7277108 (59.4%)                           ||
-||    Running time : 0.03 minutes                                             ||
+||    Running time : 0.02 minutes                                             ||
 ||                                                                            ||
 || Process BAM file mrrr1.Water.r3.gsnap.bam...                               ||
 ||    Single-end reads are included.                                          ||
