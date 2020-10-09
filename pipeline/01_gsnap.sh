@@ -34,9 +34,14 @@ do
  SAMPINFO=${GENOTYPE}.${TREATMENT}.r${REP} 
  echo "$SAMPINFO"
  OUTFILE=$OUTDIR/$SAMPINFO.gsnap.sam
+ OUTBAM=$OUTDIR/$SAMPINFO.gsnap.bam
  READS=$(ls $INDIR/${PREFIX}_S*_R1_001.fastq.gz)
  echo "$READS"
  echo "$OUTFILE"
+ if [ -f $OUTBAM ]; then
+	 echo "already generate $OUTBAM"
+	 exit
+ fi
  if [ ! -f $OUTFILE ]; then  
   gsnap -t $THREADCOUNT -s splicesites -D genome --gunzip \
   -d candida_lusitaniae --read-group-id=$PREFIX --read-group-name=$SAMPINFO \
