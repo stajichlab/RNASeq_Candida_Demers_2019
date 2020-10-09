@@ -34,10 +34,11 @@ echo "$infile $bam"
 echo "CREATE_INDEX=true VALIDATION_STRINGENCY=LENIENT TMP_DIR=/scratch/${USER} RGID=$PREFIX RGSM=$SAMPINFO RGPL=NextSeq RGPU=Dartmouth RGLB=$PREFIX"
 if [ ! -f $bai ]; then
  java -Xmx${MEM}g -jar $PICARD AddOrReplaceReadGroups SO=coordinate I=$infile O=$bam CREATE_INDEX=true VALIDATION_STRINGENCY=LENIENT TMP_DIR=/scratch/${USER} RGID=$PREFIX RGSM=$SAMPINFO RGPL=NextSeq RGPU=Dartmouth RGLB=$PREFIX
- #if [ -f $bam ]; then
-  #rm $infile; touch $infile
-  #touch $bam
- #fi
+ if [ -f $bam ]; then
+  rm $infile; 
+ # touch $infile
+ # touch $bam
+ fi
 fi
 
 done
