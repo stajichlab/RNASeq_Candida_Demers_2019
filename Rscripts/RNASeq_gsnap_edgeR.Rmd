@@ -1,0 +1,715 @@
+---
+title: "R Notebook 20201008 RNA-Seq analysis_EdgeR"
+output: html_notebook
+---
+
+```{r, setup}
+knitr::opts_knit$set(root.dir=rstudioapi::getActiveProject())
+```
+
+```{r}
+library(limma)
+library(edgeR)
+library(splines)
+library(openxlsx)
+library(gplots)
+library(pheatmap)
+ # project path
+rstudioapi::getActiveDocumentContext()$path # file path
+```
+#Import Count Data from RNA-Seq Read Mapping and formatting
+
+```{r}
+
+data.all<- read.csv("results/featureCounts/ClusDemers_2019.subRead_gsnap.tab", skip = 1, header=T, sep="\t",stringsAsFactors = FALSE)
+
+colnames(data.all)
+
+data<-data.all[,7:60]
+rownames(data) <-data.all$Geneid
+names(data)
+data_reordered<-data[c(16:18, 50, 51, 54, 43:45, 7:9, 25:27, 34:36, 10:12, 46, 47, 52, 37:39, 1:3, 19:21, 28:30, 13:15, 48, 49, 53, 40:42, 4:6, 22:24, 31:33)]
+
+
+names(data_reordered)
+
+colnames(data_reordered)<- c(rep("U04_ctl", 3), rep("U04 mrr1_ctl", 3), rep("MRR1-anc_ctl", 3), rep("MRR1-L1Q1_ctl", 3), rep("MRR1-Y813C_ctl", 3), rep("MRR1-Y8P1_ctl", 3), rep("U04_dia", 3), rep("U04 mrr1_dia", 3), rep("MRR1-anc_dia", 3), rep("MRR1-L1Q1_dia", 3), rep("MRR1-Y813C_dia", 3), rep("MRR1-Y8P1_dia", 3), rep("U04_H2O2", 3), rep("U04 mrr1_H2O2", 3), rep("MRR1-anc_H2O2", 3), rep("MRR1-L1Q1_H2O2", 3), rep("MRR1-Y813C_H2O2", 3), rep("MRR1-Y8P1_H2O2", 3))
+
+```
+
+#assign groups based on biological replicates and models training
+```{r}
+group_bio_ctl <-c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6)  #for model taking into acount only Mrr1 activity in the control conditions, only use samples 1:18
+
+group_bio_ctl_excludeY8P1 <-c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5)
+
+group_bio_ctlH2O2 <-c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10, 11, 11, 11, 12, 12, 12) #for model taking into account only control and H2O2 samples, only use samples [1:18, 37:54]
+
+```
+
+
+Analysis 1 - Run an edgeR analysis on only the control samples to define the Mrr1 regulon in YPD (no stress conditions)
+```{r}
+DGE1_ctl <- DGEList(counts = data_reordered[,1:18], group = group_bio_ctl, genes = rownames(data_reordered))
+DGE1_ctl$samples  #check samples grouped correctly
+```
+
+Processing DGE list for Mrr1 analysis in control only samples
+```{r}
+DGE1_ctl <- DGE1_ctl[rowSums(cpm(DGE1_ctl)>1) >= 3, , keep.lib.sizes=FALSE]  #Filtering out low expression genes (fewer than 2 CPM), >=3 means across the 3 replicates
+DGE1_ctl <- calcNormFactors(DGE1_ctl) #add Normalization for Different Library Sizes (TMM) to existing DGE list
+
+DGE1_ctl$samples  #see normalization factors added to DGE list
+```
+
+Set up model to assess Mrr1 regulon in control conditions only
+```{r}
+Mrr1_activity<- factor(c(1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0))  #define groups based on Mrr1 activity
+
+design_mrr1activity<- model.matrix(~Mrr1_activity) #set up model design with Mrr1 activity
+colnames(DGE1_ctl)
+rownames(design_mrr1activity)<-colnames(DGE1_ctl)
+design_mrr1activity
+
+
+DGE1_ctl <- estimateGLMCommonDisp(DGE1_ctl, design_mrr1activity, verbose = TRUE)  # calculate overall dispersion
+#Disp = 0.00866 , BCV = 0.0931
+DGE1_ctl <- estimateGLMTrendedDisp(DGE1_ctl, design_mrr1activity) # calculate dispersion trend based on gene abundance
+DGE1_ctl <- estimateGLMTagwiseDisp(DGE1_ctl, design_mrr1activity) #calculate separate dispersion for each gene
+
+fit_ctl<- glmFit(DGE1_ctl, design_mrr1activity)
+lrt_ctl<- glmLRT(fit_ctl)
+topTags(lrt_ctl)
+
+de_ctl <- decideTestsDGE(lrt_ctl, adjust.method = "fdr")
+summary(de_ctl)
+#Down              344
+#NotSig           4798
+#Up                332
+
+Mrr1_control<- as.data.frame(topTags(lrt_ctl, n=5474))
+
+up_Mrr1_control<-row.names(Mrr1_control[Mrr1_control$logFC > 1 & 
+                                          Mrr1_control$FDR < 0.05,])
+
+down_Mrr1_control<-row.names(Mrr1_control[Mrr1_control$logFC < -1 & 
+                                            Mrr1_control$FDR < 0.05,])
+
+Mrr1_regulon_control_only<- c(up_Mrr1_control, down_Mrr1_control)
+
+write.xlsx(topTags(lrt_ctl, n=5474), 
+           file = "20201013_EdgeR_toptags_control_conditions_only_linear_model.xlsx")
+
+write.xlsx(c(up_Mrr1_control, down_Mrr1_control), 
+           file = "20201013_control_conditions_only_Mrr1_regulon_FC2_FDR0.05.xlsx")
+```
+
+Create heatmap for the MRR1 regulon as defined from control condition only - 
+  ```{r}
+cpm_ctl<- cpm(DGE1_ctl)#create list of cpm to reference against
+rownames(cpm_ctl)<- rownames(DGE1_ctl)
+
+write.xlsx(cpm_ctl, 
+           file = "20201013_CPM_norm_in_edgeR_control_conditions_only.xlsx")
+write.table(cpm_ctl, 
+            file = "20201013_CPM_norm_in_edgeR_control_conditions_only.csv", 
+            sep = ",")
+
+heatmap_Mrr1_regulon_control_only <- data.matrix(cpm_ctl[rownames(cpm_ctl) %in%                                                   Mrr1_regulon_control_only, ])
+
+pheatmap(heatmap_Mrr1_regulon_control_only,
+         scale = 'row',
+         cellwidth = 5, 
+         cellheight = 5, 
+         fontsize = 10,
+         cluster_cols = TRUE, 
+         cluster_rows = TRUE,
+         border_color = NA,
+         cutree_rows = 1,
+         legend = TRUE,
+         fontsize_row = 5,
+         fontsize_col = 5,
+         treeheight_row = 10, 
+         treeheight_col = 10,
+         color = colorRampPalette(c("blue", "white", "red"))(75),
+         filename = "20201013_pheatmap_Mrr1_regulon_defined_in_control_condition_only_DEgenes_FC2_FDR0.05.pdf")
+
+
+#make heatmap from adjusted Mrr1 regulon list
+
+Adjusted_mrr1regulon<- read.csv("Mrr1 regulon defined in control conditions_exclude Y8P1_FC2 FDR0.05_CPM_final_cut max counts less10.csv", header = FALSE, stringsAsFactors = FALSE, row.names = 1)
+
+Adjusted_mrr1regulon<-rownames(Adjusted_mrr1regulon)
+
+heatmap_Mrr1_regulonadjusted_control_only <- data.matrix(cpm_ctl[rownames(cpm_ctl) %in%                                                   Adjusted_mrr1regulon, ])
+
+
+pheatmap(heatmap_Mrr1_regulonadjusted_control_only,
+         scale = 'row',
+         cellwidth = 5, 
+         cellheight = 5, 
+         fontsize = 10,
+         cluster_cols = TRUE, 
+         cluster_rows = TRUE,
+         border_color = NA,
+         cutree_rows = 1,
+         legend = TRUE,
+         fontsize_row = 5,
+         fontsize_col = 5,
+         treeheight_row = 10, 
+         treeheight_col = 10,
+         color = colorRampPalette(c("blue", "white", "red"))(75),
+         filename = "20201113_pheatmap_Mrr1_regulon_defined_in_control_condition_only_DEgenes_FC2_FDR0.05_adjusted.pdf")
+
+pheatmap(heatmap_Mrr1_regulonadjusted_control_only[,c(1:3,13:15,4:6, 7:12,16:18)],
+         scale = 'row',
+         cellwidth = 5, 
+         cellheight = 5, 
+         fontsize = 10,
+         cluster_cols = FALSE, 
+         cluster_rows = TRUE,
+         border_color = NA,
+         cutree_rows = 1,
+         legend = TRUE,
+         fontsize_row = 5,
+         fontsize_col = 5,
+         treeheight_row = 10, 
+         treeheight_col = 10,
+         color = colorRampPalette(c("blue", "white", "red"))(75),
+         filename = "20201113_pheatmap_Mrr1_regulon_defined_in_control_condition_only_DEgenes_FC2_FDR0.05_adjusted_ordered.pdf")
+```
+
+create heatmap of genes with higher expression in U04 mrr1 delta compared to +Mrr1-ancestral. Used a cutoff of 2 fold when comparing the normalized CPM 
+#```{r}
+#Higher_mrr1delta<- read.csv("Higher_Mrr1_delta_than_ancestral.csv", header = FALSE, stringsAsFactors = FALSE, row.names = 1)
+
+#Higher_mrr1delta<-rownames(Higher_mrr1delta)
+
+#heatmap_higher_mrr1delta <- data.matrix(cpm_ctl[rownames(cpm_ctl) %in%                                                   Higher_mrr1delta, ])
+#pheatmap(heatmap_higher_mrr1delta[,c(4:6, 7:12,16:18)],
+#         scale = 'row',
+#         cellwidth = 5,
+#         cellheight = 5,
+#         fontsize = 10,
+#         cluster_cols = FALSE,
+#         cluster_rows = FALSE,
+#         border_color = NA,
+#         cutree_rows = 1,
+#         legend = TRUE,
+#         fontsize_row = 5,
+#        fontsize_col = 5,
+#         treeheight_row = 10,
+#         treeheight_col = 10,
+#         color = colorRampPalette(c("blue", "white", "red"))(75),
+#         filename = "20201118_pheatmap_Genes_with_higher_exp_in_mrr1_delta_than_anc_2Fd_from_norm_CPM.pdf")
+#
+#
+#```
+
+
+A bit of the inconsistency comes from Y8P1 which we know has some odd things happening...
+Here limited statistical analysis to naturally occuring alleles then added Y8P1 to the heatmap for comparison
+```{r}
+DGE1_ctl_exclude_Y8P1 <- DGEList(counts = data_reordered[,1:15], group = group_bio_ctl_excludeY8P1, genes = rownames(data_reordered))
+
+DGE1_ctl_exclude_Y8P1 <- DGE1_ctl_exclude_Y8P1[rowSums(cpm(DGE1_ctl_exclude_Y8P1)>1) >= 3, , keep.lib.sizes=FALSE]  #Filtering out low expression genes (fewer than 2 CPM), >=3 means across the 3 replicates
+DGE1_ctl_exclude_Y8P1 <- calcNormFactors(DGE1_ctl_exclude_Y8P1) #add Normalization for Different Library Sizes (TMM) to existing DGE list
+
+DGE1_ctl_exclude_Y8P1$samples  #see normalization factors added to DGE list
+
+Mrr1_activity_exclude_Y8P1<- factor(c(1,1,1,0,0,0,0,0,0,0,0,0,1,1,1))  #define groups based on Mrr1 activity
+
+design_mrr1activity_exclude_Y8P1<- model.matrix(~Mrr1_activity_exclude_Y8P1) #set up model design with Mrr1 activity
+colnames(DGE1_ctl_exclude_Y8P1)
+rownames(design_mrr1activity_exclude_Y8P1)<-colnames(DGE1_ctl_exclude_Y8P1)
+design_mrr1activity_exclude_Y8P1
+
+
+DGE1_ctl_exclude_Y8P1 <- estimateGLMCommonDisp(DGE1_ctl_exclude_Y8P1, design_mrr1activity_exclude_Y8P1, verbose = TRUE)  # calculate overall dispersion
+#Disp = 0.00531 , BCV = 0.0728
+DGE1_ctl_exclude_Y8P1 <- estimateGLMTrendedDisp(DGE1_ctl_exclude_Y8P1, design_mrr1activity_exclude_Y8P1) # calculate dispersion trend based on gene abundance
+DGE1_ctl_exclude_Y8P1 <- estimateGLMTagwiseDisp(DGE1_ctl_exclude_Y8P1, design_mrr1activity_exclude_Y8P1) #calculate separate dispersion for each gene
+
+fit_ctl_exclude_Y8P1<- glmFit(DGE1_ctl_exclude_Y8P1, design_mrr1activity_exclude_Y8P1)
+lrt_ctl_exclude_Y8P1<- glmLRT(fit_ctl_exclude_Y8P1)
+topTags(lrt_ctl_exclude_Y8P1)
+
+de_ctl_exclude_Y8P1 <- decideTestsDGE(lrt_ctl_exclude_Y8P1, adjust.method = "fdr")
+summary(de_ctl_exclude_Y8P1)
+#Down              412
+#NotSig           4447
+#Up                604
+
+Mrr1_control_exlude_Y8P1<- as.data.frame(topTags(lrt_ctl_exclude_Y8P1, n=5463))
+up_Mrr1_control_exclude_Y8P1<-row.names(Mrr1_control_exlude_Y8P1[Mrr1_control_exlude_Y8P1$logFC > 1 & 
+                                                                   Mrr1_control_exlude_Y8P1$FDR < 0.05,])
+
+down_Mrr1_control_exclude_Y8P1<-row.names(Mrr1_control_exlude_Y8P1[Mrr1_control_exlude_Y8P1$logFC < -1 & 
+                                                                     Mrr1_control_exlude_Y8P1$FDR < 0.05,])
+
+Mrr1_regulon_control_only_exclude_Y8P1<- c(up_Mrr1_control_exclude_Y8P1, down_Mrr1_control_exclude_Y8P1)
+
+write.xlsx(topTags(lrt_ctl_exclude_Y8P1, n=5463), 
+           file = "20201013_EdgeR_toptags_control_conditions_only_linear_model_excluded_Y8P1_from model.xlsx")
+
+write.xlsx(Mrr1_regulon_control_only_exclude_Y8P1, 
+           file = "20201013_control_conditions_only_Mrr1_regulon_if_exclude_Y8P1_FC2_FDR_0.05.xlsx")
+
+
+#repeat above to obtain list of FC1.5 (0.585)
+
+up_Mrr1_control_exclude_Y8P1_FC0.585<-row.names(Mrr1_control_exlude_Y8P1[
+  Mrr1_control_exlude_Y8P1$logFC > 0.585 & 
+    Mrr1_control_exlude_Y8P1$FDR < 0.05,])
+
+down_Mrr1_control_exclude_Y8P1_FC0.585<-row.names(Mrr1_control_exlude_Y8P1[
+  Mrr1_control_exlude_Y8P1$logFC < -0.585 &
+    Mrr1_control_exlude_Y8P1$FDR < 0.05,])
+
+Mrr1_regulon_control_only_exclude_Y8P1_FC0.585<-
+  c(up_Mrr1_control_exclude_Y8P1_FC0.585, 
+    down_Mrr1_control_exclude_Y8P1_FC0.585)
+
+#export list of cpm to reference against
+cpm_ctl_excludeY8P1<- cpm(DGE1_ctl_exclude_Y8P1)#create list of cpm to reference against
+rownames(cpm_ctl_excludeY8P1)<- rownames(DGE1_ctl_exclude_Y8P1)
+
+write.xlsx(cpm_ctl_excludeY8P1, 
+           file = "20201013_CPM_norm_in_edgeR_control_conditions_only_exclude_Y8P1_analysis.xlsx")
+
+
+heatmap_Mrr1_regulon_control_only_exclude_Y8P1_analysis <-
+  data.matrix(cpm_ctl[rownames(cpm_ctl) %in% 
+                        Mrr1_regulon_control_only_exclude_Y8P1, ])
+
+pheatmap(heatmap_Mrr1_regulon_control_only_exclude_Y8P1_analysis,
+         scale = 'row',
+         cellwidth = 5, 
+         cellheight = 5, 
+         fontsize = 10,
+         cluster_cols = TRUE, 
+         cluster_rows = TRUE,
+         border_color = NA,
+         cutree_rows = 1,
+         legend = TRUE,
+         fontsize_row = 5,
+         fontsize_col = 5,
+         treeheight_row = 10, 
+         treeheight_col = 10,
+         color = colorRampPalette(c("blue", "white", "red"))(75),
+         filename = "20201013_pheatmap_Mrr1_regulon_defined_in_control_condition_only_excluding_Y8P1_DEgenes_FC2_FDR_0.05.pdf")
+```
+
+compare gene lists get with and without Y8P1
+**Good overlap (47 genes on both), only 10 unique to one of analyses
+```{r}
+Venn_compare_w_wo_Y8P1<- venn(list(Mrr1_regulon_control_only, Mrr1_regulon_control_only_exclude_Y8P1))
+
+Mrr1_regulon_control_only_exclude_Y8P1
+```
+
+```{r}
+plot(cpm_ctl[,1], cpm_ctl[,4], log = "xy")
+```
+
+Look at OSR genes in new normalized set - under control conditions
+
+```{r}
+OSR_response<-read.csv("20200825_OSR_genes.csv", header = FALSE, stringsAsFactors = FALSE, row.names = 1)
+
+OSR_response<-rownames(OSR_response)
+
+heatmap_OSR_response_ctl_excludeY8P1<- data.matrix(cpm_ctl_excludeY8P1[rownames(cpm_ctl_excludeY8P1) %in% OSR_response, ])
+
+
+pheatmap(heatmap_OSR_response_ctl_excludeY8P1 [,],
+         scale = 'row',
+         cellwidth = 4, 
+         cellheight = 5, 
+         fontsize = 10,
+         cluster_cols = TRUE, 
+         cluster_rows = TRUE,
+         border_color = NA,
+         cutree_rows = 1,
+         cutree_cols = 1,
+         legend = TRUE,
+         fontsize_row = 5,
+         fontsize_col = 5,
+         treeheight_row = 10, 
+         treeheight_col = 10,
+         color = colorRampPalette(c("blue", "white", "red"))(75),
+         filename = "20201026_pheatmap_OSR_genes_control_condition_excluded_Y8P1_in_analysis.pdf")
+
+##venn list to determine how many DEgenes are considered OSR 
+
+OSR_DE_control_excludeY8P1<- venn(list(OSR_response, Mrr1_regulon_control_only_exclude_Y8P1))
+
+OSR_DE_control_excludeY8P1_FC1<-attr(OSR_DE_control_excludeY8P1, "intersections")
+print(OSR_DE_control_excludeY8P1_FC1)
+
+##CLUG_05766 - catalase homolog, but expression a little sketchy
+
+##check the overlap with FC0.585
+OSR_DE_control_excludeY8P1_FC0.585<- venn(list(OSR_response, Mrr1_regulon_control_only_exclude_Y8P1_FC0.585))
+
+OSR_DE_control_excludeY8P1_FC0.585<-attr(OSR_DE_control_excludeY8P1_FC0.585, "intersections")
+print(OSR_DE_control_excludeY8P1_FC0.585)
+```
+
+
+Analysis 2-
+  
+  Regular edgeR Analysis (for Unpaired Samples)
+Not publishing diamide dataset, create model with ctl and H2O2 only (call DGE_all for simplicity)
+##EXP is dataset cut with rowmean<10 before normalization
+##Data will be cut by DGE1 for cpm<1 - recommended by EdgeR package, use Data going forward from here
+```{r}
+DGE1_all <- DGEList(counts = data_reordered[,c(1:18, 37:54)], group = group_bio_ctlH2O2, genes = row.names(data_reordered))
+DGE1_all$samples #samples grouped correctly
+```
+Filtering out low expression genes (fewer than 2 CPM):
+  #>=3 means 3 replicates
+  ```{r}
+DGE1_all <- DGE1_all[rowSums(cpm(DGE1_all)>1) >= 3, , keep.lib.sizes=FALSE]
+```
+
+Normalization for Different Library Sizes (TMM):
+  ```{r}
+DGE1_all <- calcNormFactors(DGE1_all) # adding information to DGEList object!
+DGE1_all$samples #can see the normalization factor
+```
+
+Estimate Dispersion:
+  #determining the random noise within groups of an experiment
+  ```{r}
+#assign genotype factor for model
+genotype<- factor(rep(c(rep("WT",3), rep("mrr1",3), rep("anc",3), rep("L1Q1", 3), rep("Y8",3), rep("Y8P1",3)),2))
+#relevel to assign mrr1 null as the reference
+genotype<- relevel(genotype, ref = "anc")
+genotype
+
+#assign treatment factor for model
+treatment<-factor(c(rep("ctl", 18), rep("H2O2",18)))
+treatment
+
+
+#dont stitch together so that I can maintain power by not loosing associations between groupings (dont want 18 groups, want 3 groups of 6 - katja consult)
+
+design<- model.matrix(~ genotype*treatment)
+
+rownames(design)<-colnames(DGE1_all)
+
+data.frame(Sample=colnames(DGE1_all), genotype, treatment) #checking that everything assigned properly
+
+#GLM for linear modeling, more complex things happening
+DGE1_all <- estimateGLMCommonDisp(DGE1_all, design, verbose = TRUE) #calculate overall dispersion
+DGE1_all <- estimateGLMTrendedDisp(DGE1_all, design) # calculate dispersion trend based on gene abundance
+DGE1_all <- estimateGLMTagwiseDisp(DGE1_all, design)# calculate separate dispersion for each gene
+
+#Norm<- DGE1$pseudo.counts
+#write.xlsx2(cbind(rownames(Exp), Norm), file = "Normalized_RNASeq_dataset_all_20190401.xlsx")
+
+#8.03% variability between replicates- average all genes, 
+#Disp = 0.00694 , BCV = 0.0833 
+
+```
+
+
+Defining model components
+```{r}
+#look at variability within samples, can see a few genes highly variable between replicates but overall dispersion not bad BCV=8.2%
+plotBCV(DGE1_all)
+
+cpm_all<- cpm(DGE1_all)
+rownames(cpm_all)<- rownames(DGE1_all)
+
+cpm_all_log2<-log(cpm_all,2)
+
+write.csv(cpm_all,file='20201124_cpm_all_DGE1_normalized.csv' )
+
+```
+
+
+Create heatmap of Mrr1 regulated genes (FC2) in different conditions
+```{r}
+Adjusted_mrr1regulon<- read.csv("Mrr1_regulon_defined_in_control_conditions_exclude_Y8P1_FC2_FDR0.05_CPM_final_cut_max_counts_less10.csv", header = FALSE, stringsAsFactors = FALSE, row.names = 1)
+
+Adjusted_mrr1regulon<-rownames(Adjusted_mrr1regulon)
+
+heatmap_Mrr1_regulonadjusted_allsamples <-
+  data.matrix(cpm_all[rownames(cpm_all) %in%                                                   Adjusted_mrr1regulon, ])
+
+
+pheatmap(heatmap_Mrr1_regulonadjusted_allsamples[, c( 7:9,13:15,  19:21, 31:33, 25:30)],
+         scale = 'row',
+         cellwidth = 4, 
+         cellheight = 5, 
+         fontsize = 10,
+         cluster_cols = FALSE, 
+         cluster_rows = TRUE,
+         border_color = NA,
+         cutree_rows = 2,
+         gaps_col = c(6, 12),
+         legend = TRUE,
+         fontsize_row = 5,
+         fontsize_col = 5,
+         treeheight_row = 10, 
+         treeheight_col = 10,
+         color = colorRampPalette(c("blue", "white", "red"))(75),
+         filename = "20201118_pheatmap_Mrr1_regulon_defined_in_control_condition_DEgenes_FC2_FDR0.05_YPD_and_H2O2.pdf")
+
+```
+
+
+Create heatmap of OSR genes for all conditions
+```{r}
+OSR_response<-read.csv("20200825_OSR_genes.csv", header = FALSE, stringsAsFactors = FALSE, row.names = 1)
+
+OSR_response<-rownames(OSR_response)
+
+heatmap_OSR_response_allconditions<-
+  data.matrix(cpm_all[rownames(cpm_all) %in% OSR_response, ])
+
+
+pheatmap(heatmap_OSR_response_allconditions [,c(7:9, 13:15, 19:21, 31:33, 23:25, 27:30, 34:36)],
+         scale = 'row',
+         cellwidth = 4, 
+         cellheight = 5, 
+         fontsize = 10,
+         cluster_cols = TRUE, 
+         cluster_rows = TRUE,
+         border_color = NA,
+         cutree_rows = 2,
+         cutree_cols = 2,
+         legend = TRUE,
+         fontsize_row = 5,
+         fontsize_col = 5,
+         treeheight_row = 10, 
+         treeheight_col = 10,
+         color = colorRampPalette(c("blue", "white", "red"))(75),
+         filename = "20201118_pheatmap_OSR_genes_all_condition.pdf")
+
+#log scale the data
+heatmap_OSR_response_allconditions_log2<-
+  data.matrix(cpm_all_log2[rownames(cpm_all_log2) %in% OSR_response, ])
+
+
+pheatmap(heatmap_OSR_response_allconditions_log2 [,c(7:9, 13:15, 19:21, 31:33, 23:25, 27:30, 34:36)],
+         scale = 'row',
+         cellwidth = 4, 
+         cellheight = 5, 
+         fontsize = 10,
+         cluster_cols = TRUE, 
+         cluster_rows = TRUE,
+         border_color = NA,
+         cutree_rows = 2,
+         cutree_cols = 2,
+         legend = TRUE,
+         fontsize_row = 5,
+         fontsize_col = 5,
+         treeheight_row = 10, 
+         treeheight_col = 10,
+         color = colorRampPalette(c("blue", "white", "red"))(75),
+         filename = "20201118_pheatmap_OSR_genes_all_condition_log2scaled.pdf")
+
+```
+
+
+
+```{r}
+
+#Making model
+fit_all <- glmFit(DGE1_all, design)
+
+colnames(fit_all$coefficients)
+
+#genotype - main genotype effect - regardless of treatment, after accounting for treatment
+#treatment - main treatment effect - regardless of genotype
+#genotype:treatment - interactions between 2 groups, for this strain compared to ref, what changes are sig dif than expected (dif between predicted and reality) based on genotype and treatment FCs
+```
+
+
+Import full Mrr1 regulon list - FC1.5 for comparison to H2O2 and diamide treatment conditions
+```{r}
+Adjusted_mrr1regulon_fc1.5<- read.csv("Mrr1 regulon defined in control conditions_exclude Y8P1_FC1.5 FDR0.05_CPM_final_cut max counts less10.csv", header = FALSE, stringsAsFactors = FALSE, row.names = 1)
+
+Adjusted_mrr1regulon_fc1.5<-rownames(Adjusted_mrr1regulon_fc1.5)
+```
+
+
+```{r}
+#H2O2 treatment effect
+lrt_treatment_H2O2<-glmLRT(fit_all, coef = 7) 
+de_treatment_H2O2<-decideTestsDGE(lrt_treatment_H2O2, adjust.method = "fdr")
+summary(de_treatment_H2O2)
+save_treatment_H2O2<- as.data.frame(topTags(lrt_treatment_H2O2,n=5600))
+
+#FC 1 (2-fold)
+up_treatment_H2O2<-row.names(save_treatment_H2O2[save_treatment_H2O2$logFC > 1 & save_treatment_H2O2$FDR<0.05,])
+down_treatment_H2O2<-row.names(save_treatment_H2O2[save_treatment_H2O2$logFC < -1 & save_treatment_H2O2$FDR<0.05,])
+
+write.xlsx(save_treatment_H2O2,file='20201119_lrt_toptags_treatment_H2O2.xlsx')
+
+DE_genelist_treatment_H2O2<- c(up_treatment_H2O2, down_treatment_H2O2)
+write.xlsx(DE_genelist_treatment_H2O2, file = "20201119_DE_genelist_treatment_H2O2_FC2_FDR0.05.xlsx")
+```
+
+compare gene upregulated by H2O2 treatment with those in Mrr1 regulon
+```{r}
+Venn_compare_treatmentH2O2_MRR1regulon<- venn(list(DE_genelist_treatment_H2O2, Adjusted_mrr1regulon_fc1.5))
+
+Venn_compare_treatmentH2O2_MRR1regulon_intersections<-attr(Venn_compare_treatmentH2O2_MRR1regulon, "intersections")
+print(Venn_compare_treatmentH2O2_MRR1regulon_intersections)
+
+write.xlsx(Venn_compare_treatmentH2O2_MRR1regulon_intersections$`A:B`, file = "20201119_overlap_between_H2O2_DE_FC2list_and_Mrr1_regulon_FC1.5.xlsx")
+```
+
+
+Determine the interaction between WT and Y8 with H2O2 - determine the similar signal 
+```{r}
+#WT-H2O2 ineraction 
+lrt_interaction_WTH2O2<-glmLRT(fit_all, coef = 10) 
+de_interaction_WTH2O2<-decideTestsDGE(lrt_interaction_WTH2O2,
+                                      adjust.method = "fdr")
+summary(de_interaction_WTH2O2)
+save_interaction_WTH2O2<-
+  as.data.frame(topTags(lrt_interaction_WTH2O2,n=5600))
+
+#FC 1 (2-fold)
+up_interaction_WTH2O2<-row.names(save_interaction_WTH2O2
+                                 [save_interaction_WTH2O2$logFC > 1 &
+                                     save_interaction_WTH2O2$FDR<0.05,])
+
+down_interaction_WTH2O2<-row.names(save_interaction_WTH2O2
+                                   [save_interaction_WTH2O2$logFC < -1 &
+                                       save_interaction_WTH2O2$FDR<0.05,])
+
+write.xlsx(save_interaction_WTH2O2,file='20201119_lrt_toptags_interaction_WTH2O2.xlsx')
+
+DE_genelist_interaction_WTH2O2<- c(up_interaction_WTH2O2,
+                                   down_interaction_WTH2O2)
+#write.xlsx(DE_genelist_interaction_WTH2O2, file = "20201119_DE_genelist_interaction_WTH2O2_FC2 FDR0.05.xlsx")
+
+
+
+#Y8-H2O2 ineraction 
+lrt_interaction_Y8H2O2<-glmLRT(fit_all, coef = 11) 
+de_interaction_Y8H2O2<-decideTestsDGE(lrt_interaction_Y8H2O2,
+                                      adjust.method = "fdr")
+summary(de_interaction_Y8H2O2)
+save_interaction_Y8H2O2<-
+  as.data.frame(topTags(lrt_interaction_Y8H2O2,n=5600))
+
+#FC 1 (2-fold)
+up_interaction_Y8H2O2<-row.names(save_interaction_Y8H2O2
+                                 [save_interaction_Y8H2O2$logFC > 1 &
+                                     save_interaction_Y8H2O2$FDR<0.05,])
+
+down_interaction_Y8H2O2<-row.names(save_interaction_Y8H2O2
+                                   [save_interaction_Y8H2O2$logFC < -1 &
+                                       save_interaction_Y8H2O2$FDR<0.05,])
+
+write.xlsx(save_interaction_Y8H2O2,file='20201119_lrt_toptags_interaction_Y8H2O2.xlsx')
+
+DE_genelist_interaction_Y8H2O2<- c(up_interaction_Y8H2O2,
+                                   down_interaction_Y8H2O2)
+#write.xlsx(DE_genelist_interaction_Y8H2O2, file = "20201119_DE_genelist_interaction_Y8H2O2_FC2 FDR0.05.xlsx")
+```
+
+Create Venn diagram to look at similarity in interaction response between WT and Y8 to H2O2
+```{r}
+Venn_compare_interaction_WTY8_H2O2<-
+  venn(list(DE_genelist_interaction_WTH2O2, 
+            DE_genelist_interaction_Y8H2O2))
+
+
+Venn_compare_interaction_WTY8_H2O2_intersections<-attr(
+  Venn_compare_interaction_WTY8_H2O2, "intersections")
+print(Venn_compare_interaction_WTY8_H2O2_intersections$`A:B`)
+
+##specifically compare up and down regulated lists to make sure they are regulated in the same direction
+Venn_compare_interaction_WTY8_H2O2_up<- 
+  venn(list(up_interaction_WTH2O2,
+            up_interaction_Y8H2O2))
+
+Venn_compare_interaction_WTY8_H2O2_up_intersections<-attr(
+  Venn_compare_interaction_WTY8_H2O2_up, "intersections")
+print(Venn_compare_interaction_WTY8_H2O2_up_intersections$`A:B`)
+
+Venn_compare_interaction_WTY8_H2O2_down<-
+  venn(list(down_interaction_WTH2O2,
+            down_interaction_Y8H2O2))
+
+Venn_compare_interaction_WTY8_H2O2_down_intersections<-attr(
+  Venn_compare_interaction_WTY8_H2O2_down, "intersections")
+print(Venn_compare_interaction_WTY8_H2O2_down_intersections$`A:B`)
+
+write.xlsx(Venn_compare_interaction_WTY8_H2O2_down_intersections$`A:B`, file = "20201119_Comparison_interaction_WT_and_Y8_H2O2_down_reg_(compare_to_anc).xlsx")
+```
+
+How many of genes DE in WT and Y8 in H2O2 are in Mrr1 regulon?
+  ```{r}
+#Mrr1 down regulated in H2O2 
+Venn_compare_interaction_WTY8_H2O2_down_vsMRR1regFC1.5<- 
+  venn(list(Venn_compare_interaction_WTY8_H2O2_down_intersections$`A:B`,
+            Adjusted_mrr1regulon_fc1.5))
+
+Venn_compare_interaction_WTY8_H2O2_down_vsMRR1regFC1.5_intersections<-
+  attr(Venn_compare_interaction_WTY8_H2O2_down_vsMRR1regFC1.5,
+       "intersections")
+print(Venn_compare_interaction_WTY8_H2O2_down_vsMRR1regFC1.5_intersections)
+
+#combine WT and Y8 lists (up and down)
+Venn_compare_interaction_WTY8_H2O2_vsMRR1regFC1.5<-
+  venn(list(c(Venn_compare_interaction_WTY8_H2O2_down_intersections$`A:B`,
+              Venn_compare_interaction_WTY8_H2O2_up_intersections$`A:B`),
+            Adjusted_mrr1regulon_fc1.5))
+
+Venn_compare_interaction_WTY8_H2O2_vsMRR1regFC1.5_intersections<-
+  attr(Venn_compare_interaction_WTY8_H2O2_vsMRR1regFC1.5,
+       "intersections")
+print(Venn_compare_interaction_WTY8_H2O2_vsMRR1regFC1.5_intersections$`A:B`)
+write.csv(Venn_compare_interaction_WTY8_H2O2_vsMRR1regFC1.5_intersections$`A:B`, file = "WTY8_H2O2_interaction_vsMrr1FC1.5.csv")
+```
+
+Make heatmap of genes with significant interaction for H2O2 for both WT and Y8
+```{r}
+
+write.csv(c(Venn_compare_interaction_WTY8_H2O2_down_intersections$`A:B`,
+            Venn_compare_interaction_WTY8_H2O2_up_intersections$`A:B`), file =
+            "WTY8_H2O2_interaction_combined.csv")
+
+WTY8_H2O2_interaction<-read.csv("WTY8_H2O2_interaction_combined.csv", header = TRUE, stringsAsFactors = FALSE)
+
+heatmap_WTY8_H2O2_interaction<-
+  data.matrix(cpm_all[rownames(cpm_all) %in% WTY8_H2O2_interaction$x, ])
+
+pheatmap(heatmap_WTY8_H2O2_interaction[, c( 7:9,13:15,  19:21, 31:33, 22:24, 25:30, 34:36)],
+         scale = 'row',
+         cellwidth = 4, 
+         cellheight = 5, 
+         fontsize = 10,
+         cluster_cols = FALSE, 
+         cluster_rows = TRUE,
+         border_color = NA,
+         cutree_rows = 3,
+         gaps_col = c(6, 12),
+         legend = TRUE,
+         fontsize_row = 5,
+         fontsize_col = 5,
+         treeheight_row = 10, 
+         treeheight_col = 10,
+         color = colorRampPalette(c("blue", "white", "red"))(75),
+         filename = "20201123_pheatmap_WTY8_H2O2_interaction_combined.pdf")
+
+
+```
+
+How many of genes DE in WT and Y8 in H2O2 are in OSR? - NONE
+```{r}
+Venn_compare_interaction_WTY8_H2O2_down_vsOSR<- 
+  venn(list(Venn_compare_interaction_WTY8_H2O2_down_intersections$`A:B`,
+            OSR_response))
+
+```
+
