@@ -1,55 +1,55 @@
-Prefix	Genotype	Treatment	Replicate
-ED1	WT	Water	1
-ED2	WT	Water	2
-ED3	WT	Water	3
-ED4	mrr1	Water	1
-ED5	mrr1	Water	2
-ED6	mrr1	Water	3
-ED7	anc	Water	1
-ED8	anc	Water	2
-ED9	anc	Water	3
-ED10	L1Q1	Water	1
-ED11	L1Q1	Water	2
-ED12	L1Q1	Water	3
-ED13	Y813C	Water	1
-ED14	Y813C	Water	2
-ED15	Y813C	Water	3
-ED16	Y8P1	Water	1
-ED17	Y8P1	Water	2
-ED18	Y8P1	Water	3
-ED19	WT	Diamide	1
-ED20	WT	Diamide	2
-ED21	WT	Diamide	3
-ED22	mrr1	Diamide	1
-ED23	mrr1	Diamide	2
-ED24	mrr1	Diamide	3
-ED25	anc	Diamide	1
-ED26	anc	Diamide	2
-ED27	anc	Diamide	3
-ED28	L1Q1	Diamide	1
-ED29	L1Q1	Diamide	2
-ED30	L1Q1	Diamide	3
-ED31	Y813C	Diamide	1
-ED32	Y813C	Diamide	2
-ED33	Y813C	Diamide	3
-ED34	Y8P1	Diamide	1
-ED35	Y8P1	Diamide	2
-ED36	Y8P1	Diamide	3
-ED37	WT	H2O2	1
-ED38	WT	H2O2	2
-ED39	WT	H2O2	3
-ED40	mrr1	H2O2	1
-ED41	mrr1	H2O2	2
-ED42	mrr1	H2O2	3
-ED43	anc	H2O2	1
-ED44	anc	H2O2	2
-ED45	anc	H2O2	3
-ED46	L1Q1	H2O2	1
-ED47	L1Q1	H2O2	2
-ED48	L1Q1	H2O2	3
-ED49	Y813C	H2O2	1
-ED50	Y813C	H2O2	2
-ED51	Y813C	H2O2	3
-ED52	Y8P1	H2O2	1
-ED53	Y8P1	H2O2	2
-ED54	Y8P1	H2O2	3
+Prefix	Genotype	Treatment	Replicate	GEO Sample	Description
+ED1	WT	Water	1	GSM4943437	Strain U04 control rep1
+ED2	WT	Water	2	GSM4943438	Strain U04 control rep2
+ED3	WT	Water	3	GSM4943439	Strain U04 control rep3
+ED4	mrr1	Water	1	GSM4943440	Strain U04 mrr1Δ control rep1
+ED5	mrr1	Water	2	GSM4943441	Strain U04 mrr1Δ control rep2
+ED6	mrr1	Water	3	GSM4943442	Strain U04 mrr1Δ control rep3
+ED7	anc	Water	1	GSM4943443	Strain U04 mrr1Δ +MRR1-ancestral control rep1
+ED8	anc	Water	2	GSM4943444	Strain U04 mrr1Δ +MRR1-ancestral control rep2
+ED9	anc	Water	3	GSM4943445	Strain U04 mrr1Δ +MRR1-ancestral control rep3
+ED10	L1Q1	Water	1	GSM4943446	Strain U04 mrr1Δ +MRR1-L1191H+Q1197* control rep1
+ED11	L1Q1	Water	2	GSM4943447	Strain U04 mrr1Δ +MRR1-L1191H+Q1197* control rep2
+ED12	L1Q1	Water	3	GSM4943448	Strain U04 mrr1Δ +MRR1-L1191H+Q1197* control rep3
+ED13	Y813C	Water	1	GSM4943449	Strain U04 mrr1Δ +MRR1-Y813C control rep1
+ED14	Y813C	Water	2	GSM4943450	Strain U04 mrr1Δ +MRR1-Y813C control rep2
+ED15	Y813C	Water	3	GSM4943451	Strain U04 mrr1Δ +MRR1-Y813C control rep3
+ED16	Y8P1	Water	1	GSM4943452	Strain U04 mrr1Δ +MRR1-Y813C+P1171P(t) control rep1
+ED17	Y8P1	Water	2	GSM4943453	Strain U04 mrr1Δ +MRR1-Y813C+P1171P(t) control rep2
+ED18	Y8P1	Water	3	GSM4943454	Strain U04 mrr1Δ +MRR1-Y813C+P1171P(t) control rep3
+ED19	WT	Diamide	1	GSM4943455	Strain U04 0.5 mM diamide rep1
+ED20	WT	Diamide	2	GSM4943456	Strain U04 0.5 mM diamide rep2
+ED21	WT	Diamide	3	GSM4943457	Strain U04 0.5 mM diamide rep3
+ED22	mrr1	Diamide	1	GSM4943458	Strain U04 mrr1Δ 0.5 mM diamide rep1
+ED23	mrr1	Diamide	2	GSM4943459	Strain U04 mrr1Δ 0.5 mM diamide rep2
+ED24	mrr1	Diamide	3	GSM4943460	Strain U04 mrr1Δ 0.5 mM diamide rep3
+ED25	anc	Diamide	1	GSM4943461	Strain U04 mrr1Δ +MRR1-ancestral 0.5 mM diamide rep1
+ED26	anc	Diamide	2	GSM4943462	Strain U04 mrr1Δ +MRR1-ancestral 0.5 mM diamide rep2
+ED27	anc	Diamide	3	GSM4943463	Strain U04 mrr1Δ +MRR1-ancestral 0.5 mM diamide rep3
+ED28	L1Q1	Diamide	1	GSM4943464	Strain U04 mrr1Δ +MRR1-L1191H+Q1197* 0.5 mM diamide rep1
+ED29	L1Q1	Diamide	2	GSM4943465	Strain U04 mrr1Δ +MRR1-L1191H+Q1197* 0.5 mM diamide rep2
+ED30	L1Q1	Diamide	3	GSM4943466	Strain U04 mrr1Δ +MRR1-L1191H+Q1197* 0.5 mM diamide rep3
+ED31	Y813C	Diamide	1	GSM4943467	Strain U04 mrr1Δ +MRR1-Y813C 0.5 mM diamide rep1
+ED32	Y813C	Diamide	2	GSM4943468	Strain U04 mrr1Δ +MRR1-Y813C 0.5 mM diamide rep2
+ED33	Y813C	Diamide	3	GSM4943469	Strain U04 mrr1Δ +MRR1-Y813C 0.5 mM diamide rep3
+ED34	Y8P1	Diamide	1	GSM4943470	Strain U04 mrr1Δ +MRR1-Y813C+P1171P(t) 0.5 mM diamide rep1
+ED35	Y8P1	Diamide	2	GSM4943472	Strain U04 mrr1Δ +MRR1-Y813C+P1171P(t) 0.5 mM diamide rep2
+ED36	Y8P1	Diamide	3	GSM4943475	Strain U04 mrr1Δ +MRR1-Y813C+P1171P(t) 0.5 mM diamide rep3
+ED37	WT	H2O2	1	GSM4943476	Strain U04 0.5 mM H2O2 rep1
+ED38	WT	H2O2	2	GSM4943477	Strain U04 0.5 mM H2O2 rep2
+ED39	WT	H2O2	3	GSM4943478	Strain U04 0.5 mM H2O2 rep3
+ED40	mrr1	H2O2	1	GSM4943479	Strain U04 mrr1Δ 0.5 mM H2O2 rep1
+ED41	mrr1	H2O2	2	GSM4943480	Strain U04 mrr1Δ 0.5 mM H2O2 rep2
+ED42	mrr1	H2O2	3	GSM4943481	Strain U04 mrr1Δ 0.5 mM H2O2 rep3
+ED43	anc	H2O2	1	GSM4943482	Strain U04 mrr1Δ +MRR1-ancestral 0.5 mM H2O2 rep1
+ED44	anc	H2O2	2	GSM4943483	Strain U04 mrr1Δ +MRR1-ancestral 0.5 mM H2O2 rep2
+ED45	anc	H2O2	3	GSM4943484	Strain U04 mrr1Δ +MRR1-ancestral 0.5 mM H2O2 rep3
+ED46	L1Q1	H2O2	1	GSM4943485	Strain U04 mrr1Δ +MRR1-L1191H+Q1197* 0.5 mM H2O2 rep1
+ED47	L1Q1	H2O2	2	GSM4943486	Strain U04 mrr1Δ +MRR1-L1191H+Q1197* 0.5 mM H2O2 rep2
+ED48	L1Q1	H2O2	3	GSM4943487	Strain U04 mrr1Δ +MRR1-L1191H+Q1197* 0.5 mM H2O2 rep3
+ED49	Y813C	H2O2	1	GSM4943488	Strain U04 mrr1Δ +MRR1-Y813C 0.5 mM H2O2 rep1
+ED50	Y813C	H2O2	2	GSM4943489	Strain U04 mrr1Δ +MRR1-Y813C 0.5 mM H2O2 rep2
+ED51	Y813C	H2O2	3	GSM4943490	Strain U04 mrr1Δ +MRR1-Y813C 0.5 mM H2O2 rep3
+ED52	Y8P1	H2O2	1	GSM4943491	Strain U04 mrr1Δ +MRR1-Y813C+P1171P(t) 0.5 mM H2O2 rep1
+ED53	Y8P1	H2O2	2	GSM4943492	Strain U04 mrr1Δ +MRR1-Y813C+P1171P(t) 0.5 mM H2O2 rep2
+ED54	Y8P1	H2O2	3	GSM4943493	Strain U04 mrr1Δ +MRR1-Y813C+P1171P(t) 0.5 mM H2O2 rep3
